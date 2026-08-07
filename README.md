@@ -1,2 +1,2 @@
-# bodabetinamigue
+# bodabetinamiguel
 bodabetinamiguel.dpdns.org
