@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Contact section photo placeholder">
+  <defs>
+    <radialGradient id="wash3" cx="55%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#f6eee4"/>
+      <stop offset="100%" stop-color="#e6d7c4"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#wash3)"/>
+  <circle cx="500" cy="240" r="240" fill="#cdc2e0" opacity="0.4"/>
+  <circle cx="1150" cy="640" r="300" fill="#cfd7c2" opacity="0.4"/>
+  <circle cx="1300" cy="200" r="150" fill="#e3aeb2" opacity="0.35"/>
+  <circle cx="380" cy="760" r="200" fill="#e3aeb2" opacity="0.3"/>
+  <text x="800" y="900" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#8f8676">
+    Vuestra foto aquí
+  </text>
+  <text x="800" y="936" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#7c8a6e" letter-spacing="2">
+    1600 × 1000 · reemplazar por foto real
+  </text>
+</svg>

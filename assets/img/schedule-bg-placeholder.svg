@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Schedule photo placeholder">
+  <defs>
+    <radialGradient id="wash2" cx="45%" cy="55%" r="75%">
+      <stop offset="0%" stop-color="#f0e6d8"/>
+      <stop offset="100%" stop-color="#e2d3ba"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#wash2)"/>
+  <circle cx="1180" cy="260" r="280" fill="#e3aeb2" opacity="0.4"/>
+  <circle cx="420" cy="620" r="260" fill="#cfd7c2" opacity="0.45"/>
+  <circle cx="760" cy="180" r="150" fill="#cdc2e0" opacity="0.35"/>
+  <circle cx="1300" cy="800" r="220" fill="#cdc2e0" opacity="0.3"/>
+  <text x="800" y="900" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#8f8676">
+    Foto del día aquí
+  </text>
+  <text x="800" y="936" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#7c8a6e" letter-spacing="2">
+    1600 × 1000 · reemplazar por foto real
+  </text>
+</svg>

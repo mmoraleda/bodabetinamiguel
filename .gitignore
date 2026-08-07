@@ -1,0 +1,5 @@
+# Real clasp config — contains your Apps Script project's scriptId.
+# The GitHub Action writes its own copy from a secret; for local clasp
+# use, copy apps-script/.clasp.json.example to apps-script/.clasp.json
+# and fill in your real scriptId.
+apps-script/.clasp.json

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP · Betina &amp; Miguel</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='50%25' y='50%25' font-size='26' text-anchor='middle' dominant-baseline='central'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <header class="site-header scrolled" id="siteHeader">
+    <nav class="site-nav">
+      <a class="back-home" href="index.html">← <span data-i18n="backHome">Volver a la web</span></a>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-lang-btn="es" class="active">ES</button>
+        <span class="lang-divider">/</span>
+        <button type="button" data-lang-btn="bg">BG</button>
+        <span class="lang-divider">/</span>
+        <button type="button" data-lang-btn="en">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="rsvp-page">
+    <section class="section rsvp-section">
+      <div class="section-bg" style="background-image: url('assets/img/rsvp-bg-placeholder.svg')"></div>
+      <div class="section-inner reveal is-visible">
+        <h2 data-i18n="rsvpTitle">Confirma tu asistencia</h2>
+        <div class="flourish"><span class="flourish-heart">♥</span></div>
+        <p class="rsvp-deadline" data-i18n="rsvpDeadlineNote">Por favor, confirma antes del 15 de abril de 2027</p>
+
+        <div class="rsvp-state" id="rsvpLoading">
+          <p data-i18n="rsvpLoading">Buscando tu invitación…</p>
+        </div>
+
+        <form id="rsvpForm" novalidate hidden>
+          <p class="rsvp-greeting" id="rsvpGreeting"></p>
+
+          <div id="guestList" class="guest-list"></div>
+
+          <button type="button" id="addGuestBtn" class="add-guest-btn" data-i18n="form.addGuest">+ Añadir invitado</button>
+
+          <div class="form-field">
+            <label for="notes" data-i18n="form.notes">Alergias, restricciones alimentarias o comentarios</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+          </div>
+
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button type="submit" class="submit-btn" data-i18n="form.submit">Enviar confirmación</button>
+          <p class="form-message" id="formMessage" role="status"></p>
+        </form>
+
+        <div class="rsvp-state" id="rsvpClosed" hidden>
+          <p data-i18n="rsvpClosedNote">El plazo para confirmar asistencia ha finalizado. Si necesitas contactarnos, hazlo por teléfono.</p>
+        </div>
+
+        <p class="rsvp-contact-fallback">
+          <span data-i18n="contactPhoneLabel">Teléfono</span>: <a href="tel:+34626798800">626 798 800</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/content.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/rsvp.js"></script>
+</body>
+</html>
