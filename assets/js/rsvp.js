@@ -1,7 +1,8 @@
 // rsvp.html only. This page is intentionally not linked from the homepage —
 // guests reach it only through their personal ?hash=... link (see apps-script/Code.gs).
 
-const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxnmlWonPv9fUDgcrxk7tAkk0sLovCScndZNt6Y93yWTgcV9UTzi8UmO5JLPwh6g-ZZ/exec";
 const RSVP_DEADLINE = new Date("2027-04-15T23:59:59");
 const MAX_GUESTS = 3;
 
@@ -17,8 +18,20 @@ const DEMO_GROUP = {
   groupLabel: "Familia García (demo)",
   notes: "",
   guests: [
-    { name: "Ana García", attending: "yes", menu: "", isMinor: false, isNew: false },
-    { name: "Luis García", attending: "yes", menu: "", isMinor: false, isNew: false },
+    {
+      name: "Ana García",
+      attending: "yes",
+      menu: "",
+      isMinor: false,
+      isNew: false,
+    },
+    {
+      name: "Luis García",
+      attending: "yes",
+      menu: "",
+      isMinor: false,
+      isNew: false,
+    },
   ],
 };
 
@@ -51,7 +64,13 @@ function renderRsvpForLang(lang) {
 // they're saved for the first time.
 function addGuestCard() {
   if (groupData.guests.length >= MAX_GUESTS) return;
-  groupData.guests.push({ name: "", attending: "yes", menu: "", isMinor: false, isNew: true });
+  groupData.guests.push({
+    name: "",
+    attending: "yes",
+    menu: "",
+    isMinor: false,
+    isNew: true,
+  });
   renderGuestForm(getLang());
 }
 
@@ -70,7 +89,11 @@ async function removeGuestCard(idx) {
     const res = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ action: "remove", hash: currentHash, guestName: guest.name }),
+      body: JSON.stringify({
+        action: "remove",
+        hash: currentHash,
+        guestName: guest.name,
+      }),
     });
     const json = await res.json();
     if (json.result === "success") {
@@ -85,7 +108,9 @@ async function removeGuestCard(idx) {
 }
 
 function renderGuestForm(lang) {
-  document.getElementById("rsvpGreeting").textContent = content[lang].rsvpGreeting(groupData.groupLabel);
+  document.getElementById("rsvpGreeting").textContent = content[
+    lang
+  ].rsvpGreeting(groupData.groupLabel);
 
   const notesField = document.getElementById("notes");
   notesField.value = groupData.notes || "";
@@ -201,7 +226,8 @@ function renderGuestForm(lang) {
     guestList.appendChild(card);
   });
 
-  document.getElementById("addGuestBtn").hidden = groupData.guests.length >= MAX_GUESTS;
+  document.getElementById("addGuestBtn").hidden =
+    groupData.guests.length >= MAX_GUESTS;
 }
 
 async function lookupGroup(hash) {
@@ -243,7 +269,9 @@ function refreshRsvp() {
     return;
   }
   if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
-    console.warn("Apps Script URL not configured yet — cannot look up invitation.");
+    console.warn(
+      "Apps Script URL not configured yet — cannot look up invitation.",
+    );
     redirectHome();
     return;
   }
@@ -254,7 +282,9 @@ function initForm() {
   const form = document.getElementById("rsvpForm");
   const message = document.getElementById("formMessage");
 
-  document.getElementById("addGuestBtn").addEventListener("click", addGuestCard);
+  document
+    .getElementById("addGuestBtn")
+    .addEventListener("click", addGuestCard);
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -273,7 +303,9 @@ function initForm() {
       return;
     }
 
-    const allAnswered = groupData.guests.every((_, idx) => formData.get(`attending-${idx}`));
+    const allAnswered = groupData.guests.every((_, idx) =>
+      formData.get(`attending-${idx}`),
+    );
     if (!allAnswered) {
       message.textContent = content[lang].form.validationError;
       return;

@@ -30,9 +30,8 @@ const content = {
     information: {
       title: "Información",
       items: [
-        { title: "Código de vestimenta", body: "Formal. Queremos veros elegantes." },
+        { title: "Código de vestimenta", body: "Formal. Queremos veros elegantes. La ceremonia se celebrará sobre césped, así que os recomendamos evitar tacones muy finos." },
         { title: "Llegada y aparcamiento", body: "Información por confirmar." },
-        { title: "Alojamiento", body: "Información por confirmar." },
         { title: "Niños", body: "Información por confirmar." },
       ],
     },
@@ -109,9 +108,8 @@ const content = {
     information: {
       title: "Информация",
       items: [
-        { title: "Дрескод", body: "Официално. Искаме да ви видим елегантни." },
+        { title: "Дрескод", body: "Официално. Искаме да ви видим елегантни. Церемонията ще се проведе на трева, затова препоръчваме да избягвате много тънки токчета." },
         { title: "Пристигане и паркиране", body: "Информацията предстои." },
-        { title: "Настаняване", body: "Информацията предстои." },
         { title: "Деца", body: "Информацията предстои." },
       ],
     },
@@ -188,9 +186,8 @@ const content = {
     information: {
       title: "Information",
       items: [
-        { title: "Dress code", body: "Formal. We'd love to see you dressed up." },
+        { title: "Dress code", body: "Formal. We'd love to see you dressed up. The ceremony will take place on grass, so we recommend avoiding very thin heels." },
         { title: "Arrival & parking", body: "Details to be confirmed." },
-        { title: "Accommodation", body: "Details to be confirmed." },
         { title: "Kids", body: "Details to be confirmed." },
       ],
     },
