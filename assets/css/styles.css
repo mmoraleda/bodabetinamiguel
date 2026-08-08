@@ -259,6 +259,19 @@ button:focus-visible {
   border-bottom-color: var(--color-border);
 }
 
+/* Over the hero photo the header is still transparent, so its text needs
+   to hold up against a photo instead of the cream page background. */
+.site-header:not(.scrolled) .lang-toggle button,
+.site-header:not(.scrolled) .lang-divider,
+.site-header:not(.scrolled) .nav-links a {
+  color: var(--color-surface);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+.site-header:not(.scrolled) .lang-toggle button.active {
+  color: var(--color-surface);
+}
+
 .site-nav {
   max-width: 1080px;
   margin: 0 auto;
@@ -384,7 +397,7 @@ button:focus-visible {
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  padding: var(--space-lg) var(--page-padding) var(--space-md);
+  padding: var(--space-lg) var(--page-padding) 7rem;
 }
 
 .hero-media {
@@ -658,14 +671,31 @@ button:focus-visible {
   margin-bottom: 0.75rem;
 }
 
-/* Venue */
+/* Venue — full-bleed photo needs a dark veil + light text instead of the
+   cream wash used on plain-color sections, or the photo washes out. */
+
+.venue-section .section-bg::after {
+  background: linear-gradient(180deg, rgba(32, 26, 20, 0.2) 0%, rgba(32, 26, 20, 0.55) 100%);
+}
+
+.venue-section h2,
+.venue-section .body {
+  color: var(--color-surface);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.venue-section .flourish::before,
+.venue-section .flourish::after {
+  background: rgba(255, 251, 247, 0.55);
+}
 
 .venue-script {
   font-family: var(--font-heading);
   font-style: italic;
   font-size: 1.5rem;
-  color: var(--color-accent);
+  color: var(--color-surface);
   font-weight: 600;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Location — map + CTA */
