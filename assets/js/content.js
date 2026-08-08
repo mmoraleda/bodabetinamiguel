@@ -27,7 +27,6 @@ const content = {
     mapLink: "Abrir en Google Maps →",
     dressCodeTitle: "Código de vestimenta",
     dressCodeValue: "Formal",
-    galleryTitle: "Galería",
     information: {
       title: "Información",
       items: [
@@ -107,7 +106,6 @@ const content = {
     mapLink: "Отвори в Google Maps →",
     dressCodeTitle: "Дрескод",
     dressCodeValue: "Официално",
-    galleryTitle: "Галерия",
     information: {
       title: "Информация",
       items: [
@@ -187,7 +185,6 @@ const content = {
     mapLink: "Open in Google Maps →",
     dressCodeTitle: "Dress code",
     dressCodeValue: "Formal",
-    galleryTitle: "Gallery",
     information: {
       title: "Information",
       items: [

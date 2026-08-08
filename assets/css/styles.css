@@ -200,23 +200,6 @@ button:focus-visible {
 .reveal.is-visible > *:nth-child(7) { transition-delay: 0.65s; }
 .reveal.is-visible > *:nth-child(8) { transition-delay: 0.75s; }
 
-/* Gallery items cascade in slightly after their container fades up. */
-.gallery-item {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.reveal.is-visible .gallery-item {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal.is-visible .gallery-item:nth-child(1) { transition-delay: 0.25s; }
-.reveal.is-visible .gallery-item:nth-child(2) { transition-delay: 0.35s; }
-.reveal.is-visible .gallery-item:nth-child(3) { transition-delay: 0.45s; }
-.reveal.is-visible .gallery-item:nth-child(4) { transition-delay: 0.55s; }
-
 /* Timeline entries slide in from the left, one after another, and the
    connecting line grows to meet them. */
 .timeline-item {
@@ -257,19 +240,6 @@ button:focus-visible {
   background: rgba(250, 243, 236, 0.92);
   backdrop-filter: blur(8px);
   border-bottom-color: var(--color-border);
-}
-
-/* Over the hero photo the header is still transparent, so its text needs
-   to hold up against a photo instead of the cream page background. */
-.site-header:not(.scrolled) .lang-toggle button,
-.site-header:not(.scrolled) .lang-divider,
-.site-header:not(.scrolled) .nav-links a {
-  color: var(--color-surface);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
-}
-
-.site-header:not(.scrolled) .lang-toggle button.active {
-  color: var(--color-surface);
 }
 
 .site-nav {
@@ -394,33 +364,12 @@ button:focus-visible {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 2.5rem;
   text-align: center;
-  padding: var(--space-lg) var(--page-padding) 7rem;
-}
-
-.hero-media {
-  position: absolute;
-  top: -160px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-}
-
-.hero-bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.hero-media-veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(32, 26, 20, 0.18) 0%, rgba(32, 26, 20, 0.05) 35%, rgba(32, 26, 20, 0.6) 100%);
+  padding: var(--space-lg) var(--page-padding) 6rem;
+  background: radial-gradient(circle at 50% 20%, var(--color-bg-alt) 0%, var(--color-bg) 65%);
 }
 
 .floral-corner {
@@ -449,33 +398,6 @@ button:focus-visible {
   z-index: 2;
 }
 
-.hero .eyebrow {
-  color: var(--color-surface);
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
-}
-
-.hero .flourish::before,
-.hero .flourish::after {
-  background: rgba(255, 251, 247, 0.55);
-}
-
-.hero .hero-date,
-.hero .tile-value {
-  color: var(--color-surface);
-}
-
-.hero .tile-label {
-  color: rgba(255, 251, 247, 0.75);
-}
-
-.hero .scroll-cue {
-  color: rgba(255, 251, 247, 0.85);
-}
-
-.hero .scroll-cue::after {
-  background: rgba(255, 251, 247, 0.6);
-}
-
 .couple-names {
   font-family: var(--font-heading);
   font-style: italic;
@@ -499,7 +421,6 @@ button:focus-visible {
   margin: 0.5rem 0 0;
 }
 
-.hero .couple-names,
 .closing .couple-names {
   color: var(--color-surface);
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
@@ -661,7 +582,7 @@ button:focus-visible {
   border: 1px solid var(--color-border);
 }
 
-/* Date — big graphic numeral */
+/* Date — big graphic numeral + live countdown */
 
 .date-big-day {
   margin-bottom: var(--space-xs);
@@ -669,6 +590,19 @@ button:focus-visible {
 
 .date-big-month {
   margin-bottom: 0.75rem;
+}
+
+.date-big-time {
+  margin-bottom: var(--space-md);
+}
+
+.date-section .countdown-tiles {
+  margin-top: var(--space-sm);
+  gap: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.date-section .tile-value {
+  font-size: clamp(2rem, 5vw, 3rem);
 }
 
 /* Venue — full-bleed photo needs a dark veil + light text instead of the
@@ -698,13 +632,17 @@ button:focus-visible {
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Location — map + CTA */
+/* Map + CTA, inside the venue section */
 
 .map-embed {
   border-radius: 4px;
   overflow: hidden;
   border: 1px solid var(--color-border);
-  margin-bottom: var(--space-md);
+  margin: var(--space-md) 0;
+}
+
+.venue-section .map-embed {
+  border-color: rgba(255, 251, 247, 0.4);
 }
 
 .map-embed iframe {
@@ -795,37 +733,6 @@ button:focus-visible {
   letter-spacing: 0.1em;
   font-weight: 600;
   font-size: 1.1rem;
-}
-
-/* Gallery — editorial, non-uniform grid */
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 160px;
-  gap: var(--space-sm);
-}
-
-.gallery-item {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-  border: 1px solid var(--color-border);
-}
-
-.gallery-item--large {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.gallery-item--small {
-  grid-column: span 2;
-  grid-row: span 1;
-}
-
-.gallery-item--wide {
-  grid-column: span 4;
 }
 
 /* Information — accessible accordion */
@@ -1167,19 +1074,11 @@ textarea:focus {
   .wedding-photo {
     max-height: 340px;
   }
-
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .gallery-item--wide {
-    grid-column: span 2;
-  }
 }
 
 @media (max-width: 600px) {
   .hero {
-    padding: 5rem 1.25rem 3rem;
+    padding: 5rem 1.25rem 5rem;
   }
 
   .floral-corner {
@@ -1202,11 +1101,6 @@ textarea:focus {
   .radio-group {
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .gallery-grid {
-    grid-auto-rows: 130px;
-    gap: var(--space-xs);
   }
 
   .timeline-item {

@@ -1,4 +1,4 @@
-// Homepage-only: timeline, information accordion, hero parallax, and the live countdown.
+// Homepage-only: timeline, information accordion, and the live countdown.
 // RSVP lives on its own page (rsvp.html).
 
 const WEDDING_DATE = new Date("2027-05-08T18:00:00");
@@ -74,24 +74,6 @@ function renderCountdownTiles() {
   document.getElementById("cdSeconds").textContent = String(seconds).padStart(2, "0");
 }
 
-function initHero() {
-  const media = document.querySelector(".hero-media");
-  if (!media) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  let ticking = false;
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const offset = Math.min(window.scrollY * 0.35, 160);
-      media.style.transform = `translateY(${offset}px)`;
-      ticking = false;
-    });
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-}
-
 function initAccordions() {
   const list = document.getElementById("informationList");
   if (!list) return;
@@ -112,7 +94,6 @@ function initHome() {
   initHeaderScroll();
   initReveal();
   initDotNav();
-  initHero();
   initAccordions();
   applyLang(getLang());
   renderCountdownTiles();
