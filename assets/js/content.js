@@ -32,7 +32,6 @@ const content = {
       items: [
         { title: "Código de vestimenta", body: "Formal. Queremos veros elegantes." },
         { title: "Llegada y aparcamiento", body: "Información por confirmar." },
-        { title: "Alojamiento", body: "Información por confirmar." },
         { title: "Niños", body: "Información por confirmar." },
       ],
     },
@@ -111,7 +110,6 @@ const content = {
       items: [
         { title: "Дрескод", body: "Официално. Искаме да ви видим елегантни." },
         { title: "Пристигане и паркиране", body: "Информацията предстои." },
-        { title: "Настаняване", body: "Информацията предстои." },
         { title: "Деца", body: "Информацията предстои." },
       ],
     },
@@ -190,7 +188,6 @@ const content = {
       items: [
         { title: "Dress code", body: "Formal. We'd love to see you dressed up." },
         { title: "Arrival & parking", body: "Details to be confirmed." },
-        { title: "Accommodation", body: "Details to be confirmed." },
         { title: "Kids", body: "Details to be confirmed." },
       ],
     },
