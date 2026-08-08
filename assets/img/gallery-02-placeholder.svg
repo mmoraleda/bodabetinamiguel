@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600" role="img" aria-label="Gallery photo placeholder 2">
+  <defs>
+    <radialGradient id="g2" cx="55%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#f0e6d8"/>
+      <stop offset="100%" stop-color="#e2d3ba"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1600" fill="url(#g2)"/>
+  <circle cx="850" cy="380" r="260" fill="#e3aeb2" opacity="0.4"/>
+  <circle cx="320" cy="1150" r="240" fill="#cdc2e0" opacity="0.35"/>
+  <text x="600" y="1480" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#8f8676">
+    Foto de galería aquí
+  </text>
+  <text x="600" y="1514" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#7c8a6e" letter-spacing="2">
+    1200 × 1600 · reemplazar por foto real
+  </text>
+</svg>

@@ -12,7 +12,17 @@
   --font-heading: "Playfair Display", Georgia, serif;
   --font-body: "Cormorant Garamond", Georgia, serif;
   --max-width: 760px;
+  --content-width: 1200px;
   --header-h: 4.25rem;
+
+  --page-padding: clamp(1.25rem, 4vw, 4rem);
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  --ease-editorial: cubic-bezier(.22, 1, .36, 1);
 }
 
 * {
@@ -54,6 +64,70 @@ a {
   color: var(--color-accent);
 }
 
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 3px;
+}
+
+/* Semantic typography scale — reuses the existing display/body serif
+   pairing instead of hardcoding font-size per selector. */
+
+.eyebrow {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.display-xl {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(5rem, 18vw, 11rem);
+  line-height: 0.9;
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.display-lg {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  line-height: 1.1;
+  color: var(--color-ink);
+  margin: 0 0 0.75rem;
+}
+
+.display-md {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+  line-height: 1.4;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.caption {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-soft);
+  margin: 0;
+}
+
 /* Flourish divider: line — heart — line */
 
 .flourish {
@@ -62,6 +136,10 @@ a {
   justify-content: center;
   gap: 0.75rem;
   margin: 0.9rem 0 1.75rem;
+}
+
+.flourish--left {
+  justify-content: flex-start;
 }
 
 .flourish::before,
@@ -122,39 +200,45 @@ a {
 .reveal.is-visible > *:nth-child(7) { transition-delay: 0.65s; }
 .reveal.is-visible > *:nth-child(8) { transition-delay: 0.75s; }
 
-/* Event cards cascade in slightly after their container fades up. */
-.event-details .event-card {
+/* Gallery items cascade in slightly after their container fades up. */
+.gallery-item {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.reveal.is-visible .event-details .event-card {
+.reveal.is-visible .gallery-item {
   opacity: 1;
   transform: translateY(0);
 }
 
-.reveal.is-visible .event-details .event-card:nth-child(1) { transition-delay: 0.35s; }
-.reveal.is-visible .event-details .event-card:nth-child(2) { transition-delay: 0.45s; }
-.reveal.is-visible .event-details .event-card:nth-child(3) { transition-delay: 0.55s; }
+.reveal.is-visible .gallery-item:nth-child(1) { transition-delay: 0.25s; }
+.reveal.is-visible .gallery-item:nth-child(2) { transition-delay: 0.35s; }
+.reveal.is-visible .gallery-item:nth-child(3) { transition-delay: 0.45s; }
+.reveal.is-visible .gallery-item:nth-child(4) { transition-delay: 0.55s; }
 
-/* Schedule timeline entries slide in from the left, one after another. */
-.schedule-timeline li {
+/* Timeline entries slide in from the left, one after another, and the
+   connecting line grows to meet them. */
+.timeline-item {
   opacity: 0;
   transform: translateX(-24px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.reveal.is-visible .schedule-timeline li {
+.reveal.is-visible .timeline-item {
   opacity: 1;
   transform: translateX(0);
 }
 
-.reveal.is-visible .schedule-timeline li:nth-child(1) { transition-delay: 0.45s; }
-.reveal.is-visible .schedule-timeline li:nth-child(2) { transition-delay: 0.6s; }
-.reveal.is-visible .schedule-timeline li:nth-child(3) { transition-delay: 0.75s; }
-.reveal.is-visible .schedule-timeline li:nth-child(4) { transition-delay: 0.9s; }
-.reveal.is-visible .schedule-timeline li:nth-child(5) { transition-delay: 1.05s; }
+.reveal.is-visible .timeline::before {
+  transform: scaleY(1);
+}
+
+.reveal.is-visible .timeline-item:nth-child(1) { transition-delay: 0.45s; }
+.reveal.is-visible .timeline-item:nth-child(2) { transition-delay: 0.6s; }
+.reveal.is-visible .timeline-item:nth-child(3) { transition-delay: 0.75s; }
+.reveal.is-visible .timeline-item:nth-child(4) { transition-delay: 0.9s; }
+.reveal.is-visible .timeline-item:nth-child(5) { transition-delay: 1.05s; }
 
 /* Header / nav */
 
@@ -289,34 +373,41 @@ a {
   }
 }
 
-/* Hero */
+/* Hero — full-bleed photo, metadata/title composed on top */
 
 .hero {
+  position: relative;
   min-height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 6rem 1.5rem 3rem;
-  background: radial-gradient(circle at 50% 20%, var(--color-bg-alt) 0%, var(--color-bg) 65%);
-  position: relative;
-  overflow: hidden;
+  padding: var(--space-lg) var(--page-padding) var(--space-md);
 }
 
-.hero-bg {
+.hero-media {
   position: absolute;
-  inset: 0;
+  top: -160px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: -1;
-  background-size: cover;
-  background-position: center;
 }
 
-.hero-bg::after {
-  content: "";
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hero-media-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(250, 243, 236, 0.35) 0%, rgba(250, 243, 236, 0.82) 100%);
+  background: linear-gradient(180deg, rgba(32, 26, 20, 0.18) 0%, rgba(32, 26, 20, 0.05) 35%, rgba(32, 26, 20, 0.6) 100%);
 }
 
 .floral-corner {
@@ -339,24 +430,37 @@ a {
   transform: rotate(180deg);
 }
 
-.hero-inner {
+.hero-metadata,
+.hero-title {
   position: relative;
   z-index: 2;
-  background: rgba(255, 251, 247, 0.6);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(224, 210, 194, 0.6);
-  border-radius: 18px;
-  padding: 3.25rem 3rem;
-  box-shadow: 0 24px 60px rgba(74, 69, 63, 0.08);
 }
 
-.hero-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--color-ink);
-  margin: 0;
+.hero .eyebrow {
+  color: var(--color-surface);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.hero .flourish::before,
+.hero .flourish::after {
+  background: rgba(255, 251, 247, 0.55);
+}
+
+.hero .hero-date,
+.hero .tile-value {
+  color: var(--color-surface);
+}
+
+.hero .tile-label {
+  color: rgba(255, 251, 247, 0.75);
+}
+
+.hero .scroll-cue {
+  color: rgba(255, 251, 247, 0.85);
+}
+
+.hero .scroll-cue::after {
+  background: rgba(255, 251, 247, 0.6);
 }
 
 .couple-names {
@@ -375,6 +479,17 @@ a {
   font-size: 0.45em;
   vertical-align: middle;
   margin: 0 0.1em;
+}
+
+.couple-names--small {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin: 0.5rem 0 0;
+}
+
+.hero .couple-names,
+.closing .couple-names {
+  color: var(--color-surface);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
 .hero-date {
@@ -487,6 +602,14 @@ a {
   text-align: center;
 }
 
+.section-inner--wide {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-width);
+  width: 100%;
+  text-align: center;
+}
+
 .section h2 {
   font-size: clamp(1.6rem, 3.2vw, 2rem);
   text-transform: uppercase;
@@ -495,41 +618,47 @@ a {
   margin-bottom: 0;
 }
 
-.venue-photo {
-  width: 100%;
-  max-width: 440px;
-  display: block;
-  margin: 0 auto 2.25rem;
-  border-radius: 4px;
-  border: 1px solid var(--color-border);
+/* Intro — typographic pause, no photo */
+
+.intro-text {
+  max-width: 32rem;
+  margin: 0 auto;
 }
 
-.event-details {
+/* Wedding — asymmetric text/photo layout */
+
+.wedding-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+  text-align: left;
 }
 
-.event-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+.wedding-copy .flourish {
+  margin-left: 0;
+}
+
+.wedding-photo {
+  width: 100%;
+  height: 100%;
+  max-height: 480px;
+  object-fit: cover;
   border-radius: 4px;
-  padding: 1.75rem 1.25rem;
+  border: 1px solid var(--color-border);
 }
 
-.event-card h3 {
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-accent);
+/* Date — big graphic numeral */
+
+.date-big-day {
+  margin-bottom: var(--space-xs);
+}
+
+.date-big-month {
   margin-bottom: 0.75rem;
-  font-weight: 700;
 }
 
-.event-card p {
-  margin: 0.25rem 0;
-}
+/* Venue */
 
 .venue-script {
   font-family: var(--font-heading);
@@ -539,61 +668,84 @@ a {
   font-weight: 600;
 }
 
-.map-link {
-  display: inline-block;
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-  text-decoration: underline;
-}
+/* Location — map + CTA */
 
 .map-embed {
   border-radius: 4px;
   overflow: hidden;
   border: 1px solid var(--color-border);
+  margin-bottom: var(--space-md);
 }
 
 .map-embed iframe {
   width: 100%;
-  height: 300px;
+  height: 340px;
   border: 0;
   display: block;
 }
 
-/* Schedule timeline */
+.map-cta {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  min-height: 44px;
+  line-height: 1.6;
+}
 
-.schedule-timeline {
+.map-cta:hover {
+  background: #66735a;
+}
+
+/* Timeline (schedule) */
+
+.timeline {
   position: relative;
-  list-style: none;
   margin: 0 auto;
-  padding: 0 0 0 2.25rem;
-  max-width: 420px;
+  max-width: 460px;
   text-align: left;
 }
 
-.schedule-timeline::before {
+.timeline::before {
   content: "";
   position: absolute;
-  left: 5px;
+  left: 100px;
   top: 6px;
   bottom: 6px;
   width: 1px;
   background: var(--color-border);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1s var(--ease-editorial);
 }
 
-.schedule-timeline li {
-  position: relative;
+.timeline-item {
+  display: grid;
+  grid-template-columns: 72px 24px 1fr;
+  column-gap: 1rem;
   padding-bottom: 2.25rem;
 }
 
-.schedule-timeline li:last-child {
+.timeline-item:last-child {
   padding-bottom: 0;
 }
 
-.schedule-timeline li::before {
-  content: "";
-  position: absolute;
-  left: -2.25rem;
-  top: 0.5rem;
+.timeline-time {
+  padding-top: 0.2rem;
+  text-align: right;
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+  letter-spacing: 0.05em;
+}
+
+.timeline-marker {
+  justify-self: center;
+  margin-top: 0.4rem;
   width: 11px;
   height: 11px;
   border-radius: 50%;
@@ -601,13 +753,13 @@ a {
   border: 2px solid var(--color-accent);
 }
 
-.schedule-item-body {
+.timeline-body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.schedule-name {
+.timeline-title {
   font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -615,10 +767,115 @@ a {
   font-size: 1.1rem;
 }
 
-.schedule-time {
-  font-size: 0.78rem;
+/* Gallery — editorial, non-uniform grid */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 160px;
+  gap: var(--space-sm);
+}
+
+.gallery-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.gallery-item--large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.gallery-item--small {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.gallery-item--wide {
+  grid-column: span 4;
+}
+
+/* Information — accessible accordion */
+
+.accordion {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  text-align: left;
+}
+
+.accordion-item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.accordion-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background: none;
+  border: none;
+  padding: 1.1rem 0;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.accordion-trigger::after {
+  content: "+";
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  color: var(--color-accent);
+  transition: transform 0.25s var(--ease-editorial);
+}
+
+.accordion-trigger[aria-expanded="true"]::after {
+  transform: rotate(45deg);
+}
+
+.accordion-panel {
+  overflow: hidden;
+  padding-bottom: 1.1rem;
   color: var(--color-text-soft);
-  letter-spacing: 0.05em;
+  animation: accordion-open 0.25s var(--ease-editorial);
+}
+
+@keyframes accordion-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Closing — full-screen photo, no RSVP link (invite-only model) */
+
+.closing {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-lg) var(--page-padding);
+}
+
+.closing .section-bg::after {
+  background: linear-gradient(180deg, rgba(32, 26, 20, 0.45) 0%, rgba(32, 26, 20, 0.55) 100%);
+}
+
+.closing .display-lg {
+  color: var(--color-surface);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.closing .site-footer,
+.closing .site-footer a {
+  color: rgba(255, 251, 247, 0.85);
 }
 
 /* RSVP page */
@@ -867,14 +1124,32 @@ textarea:focus {
 
 /* Responsive tweaks */
 
+@media (max-width: 900px) {
+  .wedding-layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .wedding-copy .flourish {
+    justify-content: center;
+  }
+
+  .wedding-photo {
+    max-height: 340px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-item--wide {
+    grid-column: span 2;
+  }
+}
+
 @media (max-width: 600px) {
   .hero {
     padding: 5rem 1.25rem 3rem;
-  }
-
-  .hero-inner {
-    padding: 2rem 1.5rem;
-    border-radius: 16px;
   }
 
   .floral-corner {
@@ -897,6 +1172,29 @@ textarea:focus {
   .radio-group {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .gallery-grid {
+    grid-auto-rows: 130px;
+    gap: var(--space-xs);
+  }
+
+  .timeline-item {
+    grid-template-columns: 56px 20px 1fr;
+    column-gap: 0.6rem;
+  }
+
+  .timeline::before {
+    left: 76px;
+  }
+
+  .map-embed iframe {
+    height: 240px;
+  }
+
+  .map-cta {
+    display: block;
+    text-align: center;
   }
 }
 

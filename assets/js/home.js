@@ -1,4 +1,5 @@
-// Homepage-only: schedule timeline and the live countdown. RSVP lives on its own page (rsvp.html).
+// Homepage-only: timeline, information accordion, hero parallax, and the live countdown.
+// RSVP lives on its own page (rsvp.html).
 
 const WEDDING_DATE = new Date("2027-05-08T18:00:00");
 
@@ -7,18 +8,54 @@ function renderSchedule(lang) {
   if (!list) return;
   list.innerHTML = "";
   content[lang].scheduleItems.forEach((item) => {
-    const li = document.createElement("li");
+    const article = document.createElement("article");
+    article.className = "timeline-item";
+
+    const time = document.createElement("span");
+    time.className = "timeline-time";
+    time.textContent = item.detail;
+
+    const marker = document.createElement("span");
+    marker.className = "timeline-marker";
+
     const body = document.createElement("div");
-    body.className = "schedule-item-body";
-    const name = document.createElement("span");
-    name.className = "schedule-name";
-    name.textContent = item.name;
-    const detail = document.createElement("span");
-    detail.className = "schedule-time";
-    detail.textContent = item.detail;
-    body.append(name, detail);
-    li.appendChild(body);
-    list.appendChild(li);
+    body.className = "timeline-body";
+    const title = document.createElement("span");
+    title.className = "timeline-title";
+    title.textContent = item.name;
+    body.appendChild(title);
+
+    article.append(time, marker, body);
+    list.appendChild(article);
+  });
+}
+
+function renderInformation(lang) {
+  const list = document.getElementById("informationList");
+  if (!list) return;
+  list.innerHTML = "";
+  content[lang].information.items.forEach((item, index) => {
+    const panelId = `info-panel-${index}`;
+    const itemEl = document.createElement("div");
+    itemEl.className = "accordion-item";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "accordion-trigger";
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-controls", panelId);
+    button.textContent = item.title;
+
+    const panel = document.createElement("div");
+    panel.className = "accordion-panel";
+    panel.id = panelId;
+    panel.hidden = true;
+    const body = document.createElement("p");
+    body.textContent = item.body;
+    panel.appendChild(body);
+
+    itemEl.append(button, panel);
+    list.appendChild(itemEl);
   });
 }
 
@@ -37,13 +74,49 @@ function renderCountdownTiles() {
   document.getElementById("cdSeconds").textContent = String(seconds).padStart(2, "0");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initHero() {
+  const media = document.querySelector(".hero-media");
+  if (!media) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const offset = Math.min(window.scrollY * 0.35, 160);
+      media.style.transform = `translateY(${offset}px)`;
+      ticking = false;
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+}
+
+function initAccordions() {
+  const list = document.getElementById("informationList");
+  if (!list) return;
+  list.addEventListener("click", (event) => {
+    const trigger = event.target.closest(".accordion-trigger");
+    if (!trigger) return;
+    const panel = document.getElementById(trigger.getAttribute("aria-controls"));
+    const isOpen = trigger.getAttribute("aria-expanded") === "true";
+    trigger.setAttribute("aria-expanded", String(!isOpen));
+    panel.hidden = isOpen;
+  });
+}
+
+function initHome() {
   onLangChange(renderSchedule);
+  onLangChange(renderInformation);
   initLangToggle();
   initHeaderScroll();
   initReveal();
   initDotNav();
+  initHero();
+  initAccordions();
   applyLang(getLang());
   renderCountdownTiles();
   setInterval(renderCountdownTiles, 1000);
-});
+}
+
+document.addEventListener("DOMContentLoaded", initHome);
