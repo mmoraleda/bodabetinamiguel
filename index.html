@@ -53,7 +53,7 @@
   <main class="scroll-container">
 
     <section class="hero snap-section" id="hero">
-      <!-- No background photo yet — couple will pick one; hero runs on the plain palette background until then -->
+      <div class="section-bg" style="background-image: url('assets/img/hero-bg-photo.jpg'); background-position: 85% center"></div>
       <img class="floral-corner floral-corner--tl" src="assets/img/floral-corner-placeholder.svg" alt="" loading="lazy">
       <img class="floral-corner floral-corner--br" src="assets/img/floral-corner-placeholder.svg" alt="" loading="lazy">
       <div class="hero-metadata reveal">
@@ -90,7 +90,7 @@
       <div class="section-inner reveal">
         <p class="display-xl date-big-day" data-i18n="dateBig.day">08</p>
         <p class="eyebrow date-big-month" data-i18n="dateBig.monthYear">Mayo · 2027</p>
-        <p class="caption date-big-time" data-i18n="time">18:00 h</p>
+        <p class="caption date-big-time" data-i18n="time">17:30 h</p>
         <div class="countdown-tiles" id="countdownTiles">
           <div class="tile">
             <span class="tile-value" id="cdDays">0</span>
@@ -109,6 +109,11 @@
             <span class="tile-label" data-i18n="countdownLabels.seconds">Segundos</span>
           </div>
         </div>
+        <a class="map-cta calendar-cta" id="addToCalendarBtn" data-i18n="addToCalendar"
+           href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Betina+%26+Miguel&amp;dates=20270508T173000%2F20270508T230000&amp;ctz=Europe%2FMadrid&amp;details=El+8+de+mayo+de+2027+nos+daremos+el+%C2%ABs%C3%AD+quiero%C2%BB+en+Finca+Los+Rosales%2C+rodeados+de+quienes+m%C3%A1s+queremos.&amp;location=Finca+Los+Rosales%2C+Camino+de+los+Olivos%2C+28300+Aranjuez%2C+Madrid"
+           target="_blank" rel="noopener">Añadir a Google Calendar</a>
+        <a class="ics-cta" id="downloadIcsLink" data-i18n="downloadIcs"
+           href="#" download="Boda-Betina-Miguel.ics">Descargar recordatorios (1 mes, 1 semana, 1 día) →</a>
       </div>
     </section>
 
@@ -146,7 +151,7 @@
     </section>
 
     <section class="closing snap-section" id="closing">
-      <div class="section-bg" style="background-image: url('assets/img/closing-bg-placeholder.svg')"></div>
+      <div class="section-bg" style="background-image: url('assets/img/closing-bg-photo.jpg'); background-position: center 12%"></div>
       <div class="section-inner reveal">
         <p class="display-lg closing-title" data-i18n="closing.title">Nos vemos el 8 de mayo</p>
         <h2 class="couple-names couple-names--small">Betina <span class="amp">&amp;</span> Miguel</h2>

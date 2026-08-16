@@ -605,6 +605,23 @@ button:focus-visible {
   font-size: clamp(2rem, 5vw, 3rem);
 }
 
+.date-section .calendar-cta {
+  margin-top: var(--space-md);
+}
+
+.ics-cta {
+  display: block;
+  margin-top: 0.85rem;
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ics-cta:hover {
+  color: var(--color-accent);
+}
+
 /* Venue — full-bleed photo needs a dark veil + light text instead of the
    cream wash used on plain-color sections, or the photo washes out. */
 

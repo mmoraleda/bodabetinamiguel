@@ -98,19 +98,23 @@ This repo is already wired for GitHub Pages with the custom domain in `CNAME` (`
 
 ## Adding real photos / artwork
 
-The hero (`index.html`, `#hero`) intentionally has no background photo right now — it runs on the plain palette background until a photo is chosen for it.
+Real couple photos are in use for the hero, closing, and RSVP backgrounds:
 
-Two real photos of Finca Los Rosales (official venue-branded shots, chosen from the venue's own marketing material — not third-party wedding photography of someone else's event) are already in use:
+- `assets/img/hero-bg-photo.jpg` — used as the `#hero` background
+- `assets/img/closing-bg-photo.jpg` — the full-screen closing photo (`index.html`, `#closing`)
+- `assets/img/rsvp-bg-photo.jpg` — behind the RSVP page (`rsvp.html`, its `.section-bg`)
+
+Two real photos of Finca Los Rosales (official venue-branded shots, chosen from the venue's own marketing material — not third-party wedding photography of someone else's event) are also in use:
 
 - `assets/img/venue-hero-photo.jpg` — a warm reception shot under string lights, used as the "Lugar" section background and (resized to 1200×630) as `assets/img/og-image.jpg`, the interim social-share image
 - `assets/img/venue-aerial-photo.jpg` — a drone view of the gardens, used as the inline photo next to "La Boda" copy
 
 The rest are still placeholders, all following the same soft on-palette wash pattern:
 
-- `assets/img/closing-bg-placeholder.svg` — the full-screen closing photo (`index.html`, `#closing`)
-- `assets/img/rsvp-bg-placeholder.svg` — behind the RSVP page (`rsvp.html`, its `.section-bg`)
 - `assets/img/floral-corner-placeholder.svg` — the top-left/bottom-right corner decoration on the hero (a simple line-art stand-in for the watercolor florals on the invitation card — export the real artwork as a PNG/SVG if you have the source file and swap it in for an exact match)
 - `assets/img/og-image.jpg` — currently just a resized crop of the venue photo; replace with a dedicated composition once one exists
+
+`assets/img/candidates/` holds spare couple photos not currently wired into any section — untracked and not meant to be committed (see `.gitignore`).
 
 Drop your real files into `assets/img/` and point to them instead — either overwrite the filenames directly, or add new files and update the matching `background-image` inline style (on `.section-bg`) or `<img src>` in `index.html` / `rsvp.html`.
 

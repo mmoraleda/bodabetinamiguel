@@ -3,3 +3,6 @@
 # use, copy apps-script/.clasp.json.example to apps-script/.clasp.json
 # and fill in your real scriptId.
 apps-script/.clasp.json
+
+# Spare candidate photos for section backgrounds — not meant to be committed.
+assets/img/candidates/
