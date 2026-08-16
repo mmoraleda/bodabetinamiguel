@@ -74,47 +74,6 @@ function renderCountdownTiles() {
   document.getElementById("cdSeconds").textContent = String(seconds).padStart(2, "0");
 }
 
-function buildWeddingICS() {
-  const pad = (n) => String(n).padStart(2, "0");
-  const toICSDate = (date) =>
-    `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
-
-  // 17:30 in Madrid (CEST, UTC+2) on 2027-05-08 = 15:30 UTC.
-  const start = new Date("2027-05-08T15:30:00Z");
-  const end = new Date("2027-05-08T23:00:00Z");
-
-  const alarm = (trigger) =>
-    ["BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Recordatorio: Boda de Betina & Miguel", `TRIGGER:${trigger}`, "END:VALARM"].join("\r\n");
-
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Betina & Miguel//Boda 2027//ES",
-    "CALSCALE:GREGORIAN",
-    "BEGIN:VEVENT",
-    "UID:betina-miguel-wedding-20270508@bodabetinamiguel.dpdns.org",
-    `DTSTAMP:${toICSDate(new Date())}`,
-    `DTSTART:${toICSDate(start)}`,
-    `DTEND:${toICSDate(end)}`,
-    "SUMMARY:Boda de Betina & Miguel",
-    "DESCRIPTION:¡Nos casamos! Os esperamos en Finca Los Rosales.",
-    "LOCATION:Finca Los Rosales\\, Camino de los Olivos\\, 28300 Aranjuez\\, Madrid",
-    // Months aren't a valid ICS duration unit (RFC 5545), so 1 month is approximated as 30 days.
-    alarm("-P30D"),
-    alarm("-P7D"),
-    alarm("-P1D"),
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-}
-
-function initCalendarButton() {
-  const link = document.getElementById("downloadIcsLink");
-  if (!link) return;
-  const blob = new Blob([buildWeddingICS()], { type: "text/calendar;charset=utf-8" });
-  link.href = URL.createObjectURL(blob);
-}
-
 function initAccordions() {
   const list = document.getElementById("informationList");
   if (!list) return;
@@ -136,7 +95,6 @@ function initHome() {
   initReveal();
   initDotNav();
   initAccordions();
-  initCalendarButton();
   applyLang(getLang());
   renderCountdownTiles();
   setInterval(renderCountdownTiles, 1000);

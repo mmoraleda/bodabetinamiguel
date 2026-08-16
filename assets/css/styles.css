@@ -552,11 +552,47 @@ button:focus-visible {
   margin-bottom: 0;
 }
 
-/* Intro — typographic pause, no photo */
+/* Intro — photo collage on the left, story text on the right */
 
-.intro-text {
-  max-width: 32rem;
-  margin: 0 auto;
+.intro-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+  text-align: left;
+}
+
+.intro-copy .flourish {
+  margin-left: 0;
+}
+
+.intro-photos {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 0.75rem;
+}
+
+.intro-photos-secondary {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.intro-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.intro-photo--main {
+  aspect-ratio: 3 / 4;
+}
+
+.intro-photos-secondary .intro-photo {
+  aspect-ratio: 1 / 1;
 }
 
 /* Wedding — asymmetric text/photo layout */
@@ -607,19 +643,6 @@ button:focus-visible {
 
 .date-section .calendar-cta {
   margin-top: var(--space-md);
-}
-
-.ics-cta {
-  display: block;
-  margin-top: 0.85rem;
-  font-size: 0.8rem;
-  color: var(--color-text-soft);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.ics-cta:hover {
-  color: var(--color-accent);
 }
 
 /* Venue — full-bleed photo needs a dark veil + light text instead of the
@@ -840,6 +863,14 @@ button:focus-visible {
 
 .rsvp-section {
   min-height: calc(100vh - var(--header-h));
+}
+
+.rsvp-section .section-bg {
+  /* The form can grow taller than the viewport (guest cards, notes, etc.),
+     and .section-bg stretches to match that box. Fixing the background to
+     the viewport keeps the cover-crop (and background-position) stable
+     instead of it re-stretching — and re-hiding faces — as the form grows. */
+  background-attachment: fixed;
 }
 
 .rsvp-deadline {
@@ -1079,6 +1110,28 @@ textarea:focus {
 /* Responsive tweaks */
 
 @media (max-width: 900px) {
+  .intro-layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .intro-copy .flourish {
+    justify-content: center;
+  }
+
+  .intro-photos {
+    grid-template-columns: 1fr;
+  }
+
+  .intro-photos-secondary {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+  }
+
+  .intro-photo--main {
+    aspect-ratio: 16 / 10;
+  }
+
   .wedding-layout {
     grid-template-columns: 1fr;
     text-align: center;

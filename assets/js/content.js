@@ -26,7 +26,6 @@ const content = {
     venueAddress: "Camino de los Olivos, 28300 Aranjuez, Madrid",
     mapLink: "Abrir en Google Maps →",
     addToCalendar: "Añadir a Google Calendar",
-    downloadIcs: "Descargar recordatorios (1 mes, 1 semana, 1 día) →",
     dressCodeTitle: "Código de vestimenta",
     dressCodeValue: "Formal",
     information: {
@@ -106,7 +105,6 @@ const content = {
     venueAddress: "Camino de los Olivos, 28300 Аранхуес, Мадрид, Испания",
     mapLink: "Отвори в Google Maps →",
     addToCalendar: "Добави в Google Calendar",
-    downloadIcs: "Изтегли напомняния (1 месец, 1 седмица, 1 ден) →",
     dressCodeTitle: "Дрескод",
     dressCodeValue: "Официално",
     information: {
@@ -186,7 +184,6 @@ const content = {
     venueAddress: "Camino de los Olivos, 28300 Aranjuez, Madrid, Spain",
     mapLink: "Open in Google Maps →",
     addToCalendar: "Add to Google Calendar",
-    downloadIcs: "Download reminders (1 month, 1 week, 1 day) →",
     dressCodeTitle: "Dress code",
     dressCodeValue: "Formal",
     information: {
