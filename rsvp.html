@@ -48,11 +48,6 @@
 
           <button type="button" id="addGuestBtn" class="add-guest-btn" data-i18n="form.addGuest">+ Añadir invitado</button>
 
-          <div class="form-field">
-            <label for="notes" data-i18n="form.notes">Alergias, restricciones alimentarias o comentarios</label>
-            <textarea id="notes" name="notes" rows="3"></textarea>
-          </div>
-
           <div class="hp-field" aria-hidden="true">
             <label for="website">Website</label>
             <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
@@ -64,6 +59,10 @@
 
         <div class="rsvp-state" id="rsvpClosed" hidden>
           <p data-i18n="rsvpClosedNote">El plazo para confirmar asistencia ha finalizado. Si necesitas contactarnos, hazlo por teléfono.</p>
+        </div>
+
+        <div class="rsvp-state" id="rsvpSuccess" hidden>
+          <p id="rsvpSuccessMessage"></p>
         </div>
 
         <p class="rsvp-contact-fallback">

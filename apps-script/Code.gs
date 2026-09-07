@@ -121,22 +121,21 @@ function lookupGroup(hash) {
   const col = colIndexes(rows[0]);
   const guests = [];
   let groupLabel = "";
-  let notes = "";
 
   for (let i = 1; i < rows.length; i++) {
     if (rows[i][col.hash] !== hash) continue;
     groupLabel = groupLabel || rows[i][col.group_label];
-    notes = notes || rows[i][col.notes];
     guests.push({
       name: rows[i][col.guest_name],
       attending: rows[i][col.attending] || "",
       menu: rows[i][col.menu] || "",
+      notes: rows[i][col.notes] || "",
       isMinor: toBool(rows[i][col.is_minor]),
     });
   }
 
   if (guests.length === 0) return jsonResponse({ result: "not_found" });
-  return jsonResponse({ result: "success", groupLabel, notes, guests });
+  return jsonResponse({ result: "success", groupLabel, guests });
 }
 
 function doGet(e) {
@@ -207,6 +206,7 @@ function submitRsvp(payload) {
     if (rowNum) {
       sheet.getRange(rowNum, col.attending + 1).setValue(guest.attending || "");
       sheet.getRange(rowNum, col.menu + 1).setValue(guest.menu || "");
+      sheet.getRange(rowNum, col.notes + 1).setValue(guest.notes || "");
       sheet.getRange(rowNum, col.is_minor + 1).setValue(!!guest.isMinor);
       sheet.getRange(rowNum, col.lang + 1).setValue(payload.lang || "");
       sheet.getRange(rowNum, col.responded_at + 1).setValue(now);
@@ -218,13 +218,12 @@ function submitRsvp(payload) {
       newRow[col.is_minor] = !!guest.isMinor;
       newRow[col.attending] = guest.attending || "";
       newRow[col.menu] = guest.menu || "";
+      newRow[col.notes] = guest.notes || "";
       newRow[col.lang] = payload.lang || "";
       newRow[col.responded_at] = now;
       sheet.appendRow(newRow);
     }
   });
-
-  sheet.getRange(firstMatchRow, col.notes + 1).setValue(payload.notes || "");
 
   return jsonResponse({ result: "success" });
 }

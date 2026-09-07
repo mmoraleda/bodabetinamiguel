@@ -7,8 +7,8 @@ const RSVP_DEADLINE = new Date("2027-04-15T23:59:59");
 const MAX_GUESTS = 3;
 
 let currentHash = null;
-let groupData = null; // { groupLabel, notes, guests: [{ name, attending, menu, isMinor, isNew }] }
-let rsvpPhase = "loading"; // loading | found | closed
+let groupData = null; // { groupLabel, guests: [{ name, attending, menu, notes, isMinor, isNew }] }
+let rsvpPhase = "loading"; // loading | found | closed | success
 
 // ?hash=demo previews the guest-card UI with fake data, with no network call —
 // useful before the Apps Script backend is deployed. "demo" can never collide
@@ -16,12 +16,12 @@ let rsvpPhase = "loading"; // loading | found | closed
 const DEMO_HASH = "demo";
 const DEMO_GROUP = {
   groupLabel: "Familia García (demo)",
-  notes: "",
   guests: [
     {
       name: "Ana García",
       attending: "yes",
       menu: "",
+      notes: "",
       isMinor: false,
       isNew: false,
     },
@@ -29,6 +29,7 @@ const DEMO_GROUP = {
       name: "Luis García",
       attending: "yes",
       menu: "",
+      notes: "",
       isMinor: false,
       isNew: false,
     },
@@ -50,12 +51,17 @@ function setRsvpPhase(phase) {
   document.getElementById("rsvpLoading").hidden = phase !== "loading";
   document.getElementById("rsvpForm").hidden = phase !== "found";
   document.getElementById("rsvpClosed").hidden = phase !== "closed";
+  document.getElementById("rsvpSuccess").hidden = phase !== "success";
   renderRsvpForLang(getLang());
 }
 
 function renderRsvpForLang(lang) {
   if (rsvpPhase === "found" && groupData) {
     renderGuestForm(lang);
+  }
+  if (rsvpPhase === "success") {
+    document.getElementById("rsvpSuccessMessage").textContent =
+      content[lang].form.success;
   }
 }
 
@@ -68,6 +74,7 @@ function addGuestCard() {
     name: "",
     attending: "yes",
     menu: "",
+    notes: "",
     isMinor: false,
     isNew: true,
   });
@@ -111,9 +118,6 @@ function renderGuestForm(lang) {
   document.getElementById("rsvpGreeting").textContent = content[
     lang
   ].rsvpGreeting(groupData.groupLabel);
-
-  const notesField = document.getElementById("notes");
-  notesField.value = groupData.notes || "";
 
   const guestList = document.getElementById("guestList");
   guestList.innerHTML = "";
@@ -223,6 +227,22 @@ function renderGuestForm(lang) {
     menuField.append(menuLabel, menuHint, menuInput);
     card.appendChild(menuField);
 
+    const notesWrap = document.createElement("div");
+    notesWrap.className = "form-field";
+    const notesLabel = document.createElement("label");
+    notesLabel.setAttribute("for", `notes-${idx}`);
+    notesLabel.textContent = content[lang].form.notes;
+    const notesInput = document.createElement("textarea");
+    notesInput.id = `notes-${idx}`;
+    notesInput.name = `notes-${idx}`;
+    notesInput.rows = 3;
+    notesInput.value = guest.notes || "";
+    notesInput.addEventListener("input", (e) => {
+      guest.notes = e.target.value;
+    });
+    notesWrap.append(notesLabel, notesInput);
+    card.appendChild(notesWrap);
+
     guestList.appendChild(card);
   });
 
@@ -242,6 +262,7 @@ async function lookupGroup(hash) {
         // Default to "yes" unless the sheet already has an explicit answer.
         g.attending = g.attending || "yes";
         g.menu = g.menu || "";
+        g.notes = g.notes || "";
         g.isMinor = !!g.isMinor;
         g.isNew = false;
       });
@@ -317,6 +338,7 @@ function initForm() {
         name: guest.name.trim(),
         attending,
         menu: attending === "yes" ? formData.get(`menu-${idx}`) : "",
+        notes: (formData.get(`notes-${idx}`) || "").trim(),
         isMinor: formData.get(`minor-${idx}`) === "on",
       };
     });
@@ -324,7 +346,6 @@ function initForm() {
     const payload = {
       hash: currentHash,
       guests,
-      notes: (formData.get("notes") || "").trim(),
       lang,
     };
 
@@ -337,9 +358,7 @@ function initForm() {
       const json = await res.json();
       if (json.result === "success") {
         groupData.guests = guests.map((g) => ({ ...g, isNew: false }));
-        groupData.notes = payload.notes;
-        message.textContent = content[lang].form.success;
-        renderGuestForm(lang);
+        setRsvpPhase("success");
       } else {
         message.textContent = content[lang].form.error;
       }
