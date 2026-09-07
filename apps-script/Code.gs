@@ -18,14 +18,13 @@
  * yourself, access: Anyone) and paste the resulting URL into APPS_SCRIPT_URL in
  * assets/js/rsvp.js. See README.md for the full walkthrough.
  *
- * Guests can add extra people to their own group from the RSVP page (up to
- * MAX_GUESTS_PER_GROUP, enforced here too) and remove one — removal deletes
- * that row immediately, independent of the batched submit.
+ * A group's guest count is fixed by however many rows share its `hash` —
+ * the RSVP page can't add or remove guests, only fill in each row's answer
+ * (and the guest_name itself, for rows added blank as placeholder seats).
  */
 
 const SHEET_NAME = "Guests";
 const RSVP_PAGE_URL = "https://bodabetinamiguel.dpdns.org/rsvp.html";
-const MAX_GUESTS_PER_GROUP = 3;
 
 function onOpen() {
   SpreadsheetApp.getUi()
@@ -150,31 +149,14 @@ function doGet(e) {
 // triggering a CORS preflight that Apps Script Web Apps can't answer.
 function doPost(e) {
   const payload = JSON.parse(e.postData.contents);
-  if (payload.action === "remove") {
-    return removeGuest(payload.hash, payload.guestName);
-  }
   return submitRsvp(payload);
 }
 
-// Deletes a single guest's row immediately — used by the "remove guest"
-// button on the RSVP page, separate from the batched submit below.
-function removeGuest(hash, guestName) {
-  if (!hash || !guestName) return jsonResponse({ result: "error", message: "Missing hash or guestName" });
-
-  const sheet = getGuestsSheet();
-  const rows = sheet.getDataRange().getValues();
-  const col = colIndexes(rows[0]);
-
-  for (let i = rows.length - 1; i >= 1; i--) {
-    if (rows[i][col.hash] === hash && rows[i][col.guest_name] === guestName) {
-      sheet.deleteRow(i + 1);
-      return jsonResponse({ result: "success" });
-    }
-  }
-
-  return jsonResponse({ result: "not_found" });
-}
-
+// Guests are matched to their row by position, not by name — some rows are
+// blank placeholder seats until the guest fills in a name, so name can't be
+// used as a key. This relies on lookupGroup and submitRsvp both walking the
+// sheet in the same top-to-bottom order, and guest count never changing
+// in between (the RSVP page can no longer add or remove guests).
 function submitRsvp(payload) {
   const hash = payload.hash;
   if (!hash) return jsonResponse({ result: "error", message: "Missing hash" });
@@ -184,47 +166,26 @@ function submitRsvp(payload) {
   const col = colIndexes(rows[0]);
   const now = new Date();
 
-  let groupLabel = "";
-  let firstMatchRow = -1;
-  const existingRowByName = {};
-
+  const matchingRows = [];
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][col.hash] !== hash) continue;
-    if (firstMatchRow === -1) firstMatchRow = i + 1;
-    groupLabel = groupLabel || rows[i][col.group_label];
-    existingRowByName[rows[i][col.guest_name]] = i + 1;
+    if (rows[i][col.hash] === hash) matchingRows.push(i + 1);
   }
 
-  if (firstMatchRow === -1) return jsonResponse({ result: "not_found" });
+  if (matchingRows.length === 0) return jsonResponse({ result: "not_found" });
 
   const guests = payload.guests || [];
-  const newGuestCount = guests.filter((g) => g.name && !existingRowByName[g.name]).length;
-  if (Object.keys(existingRowByName).length + newGuestCount > MAX_GUESTS_PER_GROUP) {
-    return jsonResponse({ result: "error", message: "Too many guests" });
-  }
 
-  guests.forEach((guest) => {
-    const rowNum = existingRowByName[guest.name];
-    if (rowNum) {
-      sheet.getRange(rowNum, col.attending + 1).setValue(guest.attending || "");
-      sheet.getRange(rowNum, col.menu + 1).setValue(guest.menu || "");
-      sheet.getRange(rowNum, col.notes + 1).setValue(guest.notes || "");
-      sheet.getRange(rowNum, col.is_minor + 1).setValue(!!guest.isMinor);
-      sheet.getRange(rowNum, col.lang + 1).setValue(payload.lang || "");
-      sheet.getRange(rowNum, col.responded_at + 1).setValue(now);
-    } else if (guest.name) {
-      const newRow = new Array(rows[0].length).fill("");
-      newRow[col.hash] = hash;
-      newRow[col.group_label] = groupLabel;
-      newRow[col.guest_name] = guest.name;
-      newRow[col.is_minor] = !!guest.isMinor;
-      newRow[col.attending] = guest.attending || "";
-      newRow[col.menu] = guest.menu || "";
-      newRow[col.notes] = guest.notes || "";
-      newRow[col.lang] = payload.lang || "";
-      newRow[col.responded_at] = now;
-      sheet.appendRow(newRow);
-    }
+  guests.forEach((guest, idx) => {
+    const rowNum = matchingRows[idx];
+    if (!rowNum || !guest.name) return;
+
+    sheet.getRange(rowNum, col.guest_name + 1).setValue(guest.name);
+    sheet.getRange(rowNum, col.attending + 1).setValue(guest.attending || "");
+    sheet.getRange(rowNum, col.menu + 1).setValue(guest.menu || "");
+    sheet.getRange(rowNum, col.notes + 1).setValue(guest.notes || "");
+    sheet.getRange(rowNum, col.is_minor + 1).setValue(!!guest.isMinor);
+    sheet.getRange(rowNum, col.lang + 1).setValue(payload.lang || "");
+    sheet.getRange(rowNum, col.responded_at + 1).setValue(now);
   });
 
   return jsonResponse({ result: "success" });

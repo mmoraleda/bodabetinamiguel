@@ -4,10 +4,9 @@
 const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxnmlWonPv9fUDgcrxk7tAkk0sLovCScndZNt6Y93yWTgcV9UTzi8UmO5JLPwh6g-ZZ/exec";
 const RSVP_DEADLINE = new Date("2027-04-15T23:59:59");
-const MAX_GUESTS = 3;
 
 let currentHash = null;
-let groupData = null; // { groupLabel, guests: [{ name, attending, menu, notes, isMinor, isNew }] }
+let groupData = null; // { groupLabel, guests: [{ name, attending, menu, notes, isMinor, needsName }] }
 let rsvpPhase = "loading"; // loading | found | closed | success
 
 // ?hash=demo previews the guest-card UI with fake data, with no network call —
@@ -23,7 +22,7 @@ const DEMO_GROUP = {
       menu: "",
       notes: "",
       isMinor: false,
-      isNew: false,
+      needsName: false,
     },
     {
       name: "Luis García",
@@ -31,7 +30,7 @@ const DEMO_GROUP = {
       menu: "",
       notes: "",
       isMinor: false,
-      isNew: false,
+      needsName: false,
     },
   ],
 };
@@ -65,55 +64,6 @@ function renderRsvpForLang(lang) {
   }
 }
 
-// Guests loaded from the sheet have a fixed name (the couple controls that
-// list); guests added here via "add guest" get an editable name field until
-// they're saved for the first time.
-function addGuestCard() {
-  if (groupData.guests.length >= MAX_GUESTS) return;
-  groupData.guests.push({
-    name: "",
-    attending: "yes",
-    menu: "",
-    notes: "",
-    isMinor: false,
-    isNew: true,
-  });
-  renderGuestForm(getLang());
-}
-
-async function removeGuestCard(idx) {
-  const guest = groupData.guests[idx];
-
-  // New (unsaved) guests, and anything in the no-network demo, are just dropped locally.
-  if (guest.isNew || currentHash === DEMO_HASH) {
-    groupData.guests.splice(idx, 1);
-    renderGuestForm(getLang());
-    return;
-  }
-
-  const message = document.getElementById("formMessage");
-  try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        action: "remove",
-        hash: currentHash,
-        guestName: guest.name,
-      }),
-    });
-    const json = await res.json();
-    if (json.result === "success") {
-      groupData.guests.splice(idx, 1);
-      renderGuestForm(getLang());
-    } else {
-      message.textContent = content[getLang()].form.error;
-    }
-  } catch (err) {
-    message.textContent = content[getLang()].form.error;
-  }
-}
-
 function renderGuestForm(lang) {
   document.getElementById("rsvpGreeting").textContent = content[
     lang
@@ -129,7 +79,7 @@ function renderGuestForm(lang) {
     const header = document.createElement("div");
     header.className = "guest-card-header";
 
-    if (guest.isNew) {
+    if (guest.needsName) {
       const nameInput = document.createElement("input");
       nameInput.type = "text";
       nameInput.className = "guest-name-input";
@@ -145,14 +95,6 @@ function renderGuestForm(lang) {
       nameEl.textContent = guest.name;
       header.appendChild(nameEl);
     }
-
-    const removeBtn = document.createElement("button");
-    removeBtn.type = "button";
-    removeBtn.className = "remove-guest-btn";
-    removeBtn.setAttribute("aria-label", content[lang].form.removeGuest);
-    removeBtn.textContent = "×";
-    removeBtn.addEventListener("click", () => removeGuestCard(idx));
-    header.appendChild(removeBtn);
 
     card.appendChild(header);
 
@@ -245,9 +187,6 @@ function renderGuestForm(lang) {
 
     guestList.appendChild(card);
   });
-
-  document.getElementById("addGuestBtn").hidden =
-    groupData.guests.length >= MAX_GUESTS;
 }
 
 async function lookupGroup(hash) {
@@ -264,7 +203,8 @@ async function lookupGroup(hash) {
         g.menu = g.menu || "";
         g.notes = g.notes || "";
         g.isMinor = !!g.isMinor;
-        g.isNew = false;
+        // Some rows are blank placeholder seats until the guest names them.
+        g.needsName = !g.name;
       });
       // Guests who already answered in their language once get the page in
       // that language again, without having to click the toggle every time.
@@ -308,10 +248,6 @@ function initForm() {
   const form = document.getElementById("rsvpForm");
   const message = document.getElementById("formMessage");
 
-  document
-    .getElementById("addGuestBtn")
-    .addEventListener("click", addGuestCard);
-
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const lang = getLang();
@@ -323,7 +259,7 @@ function initForm() {
       return;
     }
 
-    const missingName = groupData.guests.some((g) => g.isNew && !g.name.trim());
+    const missingName = groupData.guests.some((g) => !g.name.trim());
     if (missingName) {
       message.textContent = content[lang].form.guestNameRequired;
       return;
@@ -362,7 +298,7 @@ function initForm() {
       });
       const json = await res.json();
       if (json.result === "success") {
-        groupData.guests = guests.map((g) => ({ ...g, isNew: false }));
+        groupData.guests = guests.map((g) => ({ ...g, needsName: false }));
         setRsvpPhase("success");
       } else {
         message.textContent = content[lang].form.error;
