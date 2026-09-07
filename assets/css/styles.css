@@ -1054,7 +1054,7 @@ textarea:focus {
 }
 
 .submit-btn {
-  align-self: flex-start;
+  align-self: center;
   background: var(--color-accent);
   color: #fff;
   border: none;

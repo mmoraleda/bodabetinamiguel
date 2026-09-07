@@ -2,7 +2,7 @@
  * Backend for the wedding RSVP site — uses a Google Sheet as the guest database.
  *
  * Sheet layout (tab "Guests", created automatically on first run if missing):
- *   hash | group_label | guest_name | is_minor | attending | menu | notes | lang | responded_at
+ *   hash | group_label | guest_name | is_minor | attending | menu | notes | responded_at
  *
  * Setup:
  *   1. Add one row per guest. Guests invited together (a couple, a family)
@@ -39,7 +39,7 @@ function getGuestsSheet() {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(["hash", "group_label", "guest_name", "is_minor", "attending", "menu", "notes", "lang", "responded_at"]);
+    sheet.appendRow(["hash", "group_label", "guest_name", "is_minor", "attending", "menu", "notes", "responded_at"]);
   }
   return sheet;
 }
@@ -120,12 +120,10 @@ function lookupGroup(hash) {
   const col = colIndexes(rows[0]);
   const guests = [];
   let groupLabel = "";
-  let lang = "";
 
   for (let i = 1; i < rows.length; i++) {
     if (rows[i][col.hash] !== hash) continue;
     groupLabel = groupLabel || rows[i][col.group_label];
-    lang = lang || rows[i][col.lang];
     guests.push({
       name: rows[i][col.guest_name],
       attending: rows[i][col.attending] || "",
@@ -136,7 +134,7 @@ function lookupGroup(hash) {
   }
 
   if (guests.length === 0) return jsonResponse({ result: "not_found" });
-  return jsonResponse({ result: "success", groupLabel, lang, guests });
+  return jsonResponse({ result: "success", groupLabel, guests });
 }
 
 function doGet(e) {
@@ -184,7 +182,6 @@ function submitRsvp(payload) {
     sheet.getRange(rowNum, col.menu + 1).setValue(guest.menu || "");
     sheet.getRange(rowNum, col.notes + 1).setValue(guest.notes || "");
     sheet.getRange(rowNum, col.is_minor + 1).setValue(!!guest.isMinor);
-    sheet.getRange(rowNum, col.lang + 1).setValue(payload.lang || "");
     sheet.getRange(rowNum, col.responded_at + 1).setValue(now);
   });
 

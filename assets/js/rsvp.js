@@ -206,11 +206,6 @@ async function lookupGroup(hash) {
         // Some rows are blank placeholder seats until the guest names them.
         g.needsName = !g.name;
       });
-      // Guests who already answered in their language once get the page in
-      // that language again, without having to click the toggle every time.
-      if (groupData.lang && content[groupData.lang]) {
-        setLang(groupData.lang);
-      }
       setRsvpPhase("found");
     } else {
       redirectHome();
@@ -287,7 +282,6 @@ function initForm() {
     const payload = {
       hash: currentHash,
       guests,
-      lang,
     };
 
     try {
