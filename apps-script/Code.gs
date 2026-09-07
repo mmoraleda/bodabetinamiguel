@@ -121,10 +121,12 @@ function lookupGroup(hash) {
   const col = colIndexes(rows[0]);
   const guests = [];
   let groupLabel = "";
+  let lang = "";
 
   for (let i = 1; i < rows.length; i++) {
     if (rows[i][col.hash] !== hash) continue;
     groupLabel = groupLabel || rows[i][col.group_label];
+    lang = lang || rows[i][col.lang];
     guests.push({
       name: rows[i][col.guest_name],
       attending: rows[i][col.attending] || "",
@@ -135,7 +137,7 @@ function lookupGroup(hash) {
   }
 
   if (guests.length === 0) return jsonResponse({ result: "not_found" });
-  return jsonResponse({ result: "success", groupLabel, guests });
+  return jsonResponse({ result: "success", groupLabel, lang, guests });
 }
 
 function doGet(e) {

@@ -266,6 +266,11 @@ async function lookupGroup(hash) {
         g.isMinor = !!g.isMinor;
         g.isNew = false;
       });
+      // Guests who already answered in their language once get the page in
+      // that language again, without having to click the toggle every time.
+      if (groupData.lang && content[groupData.lang]) {
+        setLang(groupData.lang);
+      }
       setRsvpPhase("found");
     } else {
       redirectHome();
