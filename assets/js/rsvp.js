@@ -73,27 +73,41 @@ function renderGuestForm(lang) {
   guestList.innerHTML = "";
 
   groupData.guests.forEach((guest, idx) => {
+    // A discarded placeholder seat is left blank on submit (see initForm),
+    // so it's simply not rendered — its position in groupData.guests must
+    // stay untouched to keep matching the sheet row order on the backend.
+    if (guest.discarded) return;
+
     const card = document.createElement("div");
     card.className = "guest-card";
 
     const header = document.createElement("div");
     header.className = "guest-card-header";
 
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.className = "guest-name-input";
+    nameInput.placeholder = content[lang].form.guestNamePlaceholder;
+    nameInput.value = guest.name;
+    nameInput.addEventListener("input", (e) => {
+      guest.name = e.target.value;
+    });
+    header.appendChild(nameInput);
+
     if (guest.needsName) {
-      const nameInput = document.createElement("input");
-      nameInput.type = "text";
-      nameInput.className = "guest-name-input";
-      nameInput.placeholder = content[lang].form.guestNamePlaceholder;
-      nameInput.value = guest.name;
-      nameInput.addEventListener("input", (e) => {
-        guest.name = e.target.value;
+      const discardBtn = document.createElement("button");
+      discardBtn.type = "button";
+      discardBtn.className = "guest-discard-btn";
+      discardBtn.setAttribute(
+        "aria-label",
+        content[lang].form.discardGuest,
+      );
+      discardBtn.textContent = "×";
+      discardBtn.addEventListener("click", () => {
+        guest.discarded = true;
+        renderGuestForm(lang);
       });
-      header.appendChild(nameInput);
-    } else {
-      const nameEl = document.createElement("p");
-      nameEl.className = "guest-name";
-      nameEl.textContent = guest.name;
-      header.appendChild(nameEl);
+      header.appendChild(discardBtn);
     }
 
     card.appendChild(header);
@@ -254,14 +268,16 @@ function initForm() {
       return;
     }
 
-    const missingName = groupData.guests.some((g) => !g.name.trim());
+    const missingName = groupData.guests.some(
+      (g) => !g.discarded && !g.name.trim(),
+    );
     if (missingName) {
       message.textContent = content[lang].form.guestNameRequired;
       return;
     }
 
-    const allAnswered = groupData.guests.every((_, idx) =>
-      formData.get(`attending-${idx}`),
+    const allAnswered = groupData.guests.every(
+      (g, idx) => g.discarded || formData.get(`attending-${idx}`),
     );
     if (!allAnswered) {
       message.textContent = content[lang].form.validationError;
@@ -269,6 +285,11 @@ function initForm() {
     }
 
     const guests = groupData.guests.map((guest, idx) => {
+      // A discarded seat is submitted with an empty name, which the backend
+      // (submitRsvp in Code.gs) treats as "leave this row as-is."
+      if (guest.discarded) {
+        return { name: "", attending: "", menu: "", notes: "", isMinor: false };
+      }
       const attending = formData.get(`attending-${idx}`);
       return {
         name: guest.name.trim(),

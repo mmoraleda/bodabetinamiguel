@@ -969,6 +969,28 @@ button:focus-visible {
   background: transparent;
 }
 
+.guest-discard-btn {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-soft);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.guest-discard-btn:hover,
+.guest-discard-btn:focus-visible {
+  border-color: var(--color-blush);
+  color: var(--color-blush);
+}
+
 .form-field {
   display: flex;
   flex-direction: column;
