@@ -2,7 +2,7 @@
 // guests reach it only through their personal ?hash=... link (see apps-script/Code.gs).
 
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxnmlWonPv9fUDgcrxk7tAkk0sLovCScndZNt6Y93yWTgcV9UTzi8UmO5JLPwh6g-ZZ/exec";
+  "https://script.google.com/macros/s/AKfycbz1WQ64L9BFQ9mHwvUJKZ16PHubGxj7UIpLGN7SoNEsXzxLY9cJUX6juBVtBBZtqzs/exec";
 const RSVP_DEADLINE = new Date("2027-04-15T23:59:59");
 
 let currentHash = null;
