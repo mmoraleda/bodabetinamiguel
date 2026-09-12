@@ -2,7 +2,7 @@
  * Backend for the wedding RSVP site — uses a Google Sheet as the guest database.
  *
  * Sheet layout (tab "Guests", created automatically on first run if missing):
- *   hash | group_label | guest_name | is_minor | attending | menu | notes | responded_at
+ *   hash | group_label | guest_name | is_minor | attending | menu | notes | responded_at | deleted_by_attendant
  *
  * Setup:
  *   1. Add one row per guest. Guests invited together (a couple, a family)
@@ -18,9 +18,14 @@
  * yourself, access: Anyone) and paste the resulting URL into APPS_SCRIPT_URL in
  * assets/js/rsvp.js. See README.md for the full walkthrough.
  *
- * A group's guest count is fixed by however many rows share its `hash` —
- * the RSVP page can't add or remove guests, only fill in each row's answer
- * (and the guest_name itself, for rows added blank as placeholder seats).
+ * A group's guest count (row count sharing its `hash`) never changes from
+ * the RSVP page — a blank placeholder seat can be "discarded", but that
+ * only sets `deleted_by_attendant` to TRUE and blanks the row rather than
+ * removing it, so row positions stay stable. A discarded seat is hidden
+ * from the form, but an "add extra guest" button reappears whenever the
+ * group has at least one discarded seat, letting the attendant flip one
+ * back to an empty seat (`deleted_by_attendant` FALSE) to fill in again.
+ * A seat that already has a guest_name can't be discarded.
  */
 
 const SHEET_NAME = "Guests";
@@ -39,7 +44,7 @@ function getGuestsSheet() {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(["hash", "group_label", "guest_name", "is_minor", "attending", "menu", "notes", "responded_at"]);
+    sheet.appendRow(["hash", "group_label", "guest_name", "is_minor", "attending", "menu", "notes", "responded_at", "deleted_by_attendant"]);
   }
   return sheet;
 }
@@ -130,6 +135,7 @@ function lookupGroup(hash) {
       menu: rows[i][col.menu] || "",
       notes: rows[i][col.notes] || "",
       isMinor: toBool(rows[i][col.is_minor]),
+      deletedByAttendant: toBool(rows[i][col.deleted_by_attendant]),
     });
   }
 
@@ -153,8 +159,9 @@ function doPost(e) {
 // Guests are matched to their row by position, not by name — some rows are
 // blank placeholder seats until the guest fills in a name, so name can't be
 // used as a key. This relies on lookupGroup and submitRsvp both walking the
-// sheet in the same top-to-bottom order, and guest count never changing
-// in between (the RSVP page can no longer add or remove guests).
+// sheet in the same top-to-bottom order, and row positions never changing —
+// discarding a seat blanks its row and flags deleted_by_attendant instead of
+// removing the row, so this ordering assumption always holds.
 function submitRsvp(payload) {
   const hash = payload.hash;
   if (!hash) return jsonResponse({ result: "error", message: "Missing hash" });
@@ -175,13 +182,26 @@ function submitRsvp(payload) {
 
   guests.forEach((guest, idx) => {
     const rowNum = matchingRows[idx];
-    if (!rowNum || !guest.name) return;
+    if (!rowNum) return;
+
+    if (guest.deletedByAttendant) {
+      sheet.getRange(rowNum, col.guest_name + 1).setValue("");
+      sheet.getRange(rowNum, col.attending + 1).setValue("");
+      sheet.getRange(rowNum, col.menu + 1).setValue("");
+      sheet.getRange(rowNum, col.notes + 1).setValue("");
+      sheet.getRange(rowNum, col.is_minor + 1).setValue(false);
+      sheet.getRange(rowNum, col.deleted_by_attendant + 1).setValue(true);
+      return;
+    }
+
+    if (!guest.name) return;
 
     sheet.getRange(rowNum, col.guest_name + 1).setValue(guest.name);
     sheet.getRange(rowNum, col.attending + 1).setValue(guest.attending || "");
     sheet.getRange(rowNum, col.menu + 1).setValue(guest.menu || "");
     sheet.getRange(rowNum, col.notes + 1).setValue(guest.notes || "");
     sheet.getRange(rowNum, col.is_minor + 1).setValue(!!guest.isMinor);
+    sheet.getRange(rowNum, col.deleted_by_attendant + 1).setValue(false);
     sheet.getRange(rowNum, col.responded_at + 1).setValue(now);
   });
 

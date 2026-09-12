@@ -13,7 +13,7 @@ The homepage (`index.html`) never links to the RSVP page. RSVP is invite-only:
 - Guests are pre-loaded into a Google Sheet, grouped by a `hash` (one hash per invited group — couple, family, etc.).
 - Each group gets a personal link: `https://bodabetinamiguel.dpdns.org/rsvp.html?hash=THEIR_HASH`, sent directly (WhatsApp/email/etc.) — it's not discoverable from the homepage. An unknown or missing hash just bounces back to the homepage.
 - Opening that link looks up the group in the Sheet and shows a form pre-filled with their names (defaulted to attending), where each guest can mark attendance and note any diet/allergy.
-- Guests can also add extra people to their own group (up to 3 total) or remove one — removing deletes that row from the Sheet immediately, not just from the form.
+- A blank placeholder seat (no name yet in the Sheet) can be discarded from the form — this flags that row `deleted_by_attendant` and blanks it rather than deleting it, so it stays hidden but can be brought back later via an "add another guest" button, which reappears whenever the group has at least one discarded seat.
 - Submitting writes responses back into the same Sheet — that's where you manage responses, no separate admin UI.
 
 See [docs/PLAN.md](docs/PLAN.md) for the full data model and design decisions.
@@ -55,13 +55,14 @@ The guest list and responses live in [this Google Sheet](https://docs.google.com
 3. Back in the Sheet, reload it — a new **RSVP** menu should appear (you may need to re-open the sheet).
 4. Create/open the **Guests** tab (the script creates it automatically the first time it runs) and add one row per guest, with these columns:
 
-   | hash | group_label | guest_name | is_minor | attending | menu | notes | lang | responded_at |
-   |------|-------------|------------|----------|-----------|------|-------|------|---------------|
+   | hash | group_label | guest_name | is_minor | attending | menu | notes | responded_at | deleted_by_attendant |
+   |------|-------------|------------|----------|-----------|------|-------|---------------|-----------------------|
 
    - Leave `hash` blank for now.
    - `group_label` should be the same for everyone invited together (e.g. `Familia García`) — that's what groups them under one link.
    - `is_minor` can be left blank/`FALSE` — it's a checkbox on the RSVP page (marks a guest as under 18).
-   - Leave `attending`, `menu`, `notes`, `lang`, `responded_at` blank — the site fills those in.
+   - Leave `attending`, `menu`, `notes`, `responded_at` blank — the site fills those in.
+   - `deleted_by_attendant` should be blank/`FALSE` — it's set to `TRUE` if the group discards a blank placeholder seat from the RSVP page (see "Managing responses" below). If you're adding this column to a Sheet that predates it, back-fill it as `FALSE` for every existing row — a truly blank cell is also treated as `FALSE`.
 5. Run **RSVP > Generar hashes para grupos nuevos** to fill in the blank `hash` values (grouped by `group_label`).
 6. Run **RSVP > Generar enlaces de invitación** — this creates a **Links** tab with each group's shareable `rsvp.html?hash=...` URL. Send those out via WhatsApp/email/etc.
 7. In the Apps Script editor, click **Deploy > New deployment**, choose type **Web app**, set "Execute as" to yourself and "Who has access" to **Anyone**, then deploy. Copy the resulting URL.
@@ -73,7 +74,7 @@ Groups are capped at 3 guests, enforced both in the RSVP page and in `Code.gs` (
 
 ### Managing responses
 
-Just open the **Guests** tab — `attending`, `menu`, `notes`, and `responded_at` update in place as people RSVP. Guests added by the group itself (via "add guest" on the RSVP page) show up here as new rows once submitted; removing a guest from the RSVP page deletes their row immediately. Sort/filter as needed.
+Just open the **Guests** tab — `attending`, `menu`, `notes`, and `responded_at` update in place as people RSVP. Discarding a blank placeholder seat from the RSVP page blanks that row and sets `deleted_by_attendant` to `TRUE` (it isn't deleted, so row order never shifts); it goes back to `FALSE` if the group later uses "add another guest" to fill that seat again. Sort/filter as needed.
 
 ### Automated deploys via GitHub Actions (optional)
 

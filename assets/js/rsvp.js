@@ -23,6 +23,7 @@ const DEMO_GROUP = {
       notes: "",
       isMinor: false,
       needsName: false,
+      deletedByAttendant: false,
     },
     {
       name: "Luis García",
@@ -31,6 +32,7 @@ const DEMO_GROUP = {
       notes: "",
       isMinor: false,
       needsName: false,
+      deletedByAttendant: false,
     },
   ],
 };
@@ -73,10 +75,10 @@ function renderGuestForm(lang) {
   guestList.innerHTML = "";
 
   groupData.guests.forEach((guest, idx) => {
-    // A discarded placeholder seat is left blank on submit (see initForm),
-    // so it's simply not rendered — its position in groupData.guests must
-    // stay untouched to keep matching the sheet row order on the backend.
-    if (guest.discarded) return;
+    // A discarded seat is hidden rather than removed from groupData.guests —
+    // its position must stay untouched to keep matching the sheet row order
+    // on the backend (see submitRsvp in Code.gs).
+    if (guest.deletedByAttendant) return;
 
     const card = document.createElement("div");
     card.className = "guest-card";
@@ -104,7 +106,7 @@ function renderGuestForm(lang) {
       );
       discardBtn.textContent = "×";
       discardBtn.addEventListener("click", () => {
-        guest.discarded = true;
+        guest.deletedByAttendant = true;
         renderGuestForm(lang);
       });
       header.appendChild(discardBtn);
@@ -201,6 +203,28 @@ function renderGuestForm(lang) {
 
     guestList.appendChild(card);
   });
+
+  // A discarded seat can be brought back as a fresh, blank placeholder —
+  // only offered while at least one exists to revive.
+  if (groupData.guests.some((g) => g.deletedByAttendant)) {
+    const addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.className = "add-guest-btn";
+    addBtn.textContent = content[lang].form.addGuest;
+    addBtn.addEventListener("click", () => {
+      const hidden = groupData.guests.find((g) => g.deletedByAttendant);
+      if (!hidden) return;
+      hidden.deletedByAttendant = false;
+      hidden.name = "";
+      hidden.needsName = true;
+      hidden.attending = "yes";
+      hidden.menu = "";
+      hidden.notes = "";
+      hidden.isMinor = false;
+      renderGuestForm(lang);
+    });
+    guestList.appendChild(addBtn);
+  }
 }
 
 async function lookupGroup(hash) {
@@ -217,6 +241,7 @@ async function lookupGroup(hash) {
         g.menu = g.menu || "";
         g.notes = g.notes || "";
         g.isMinor = !!g.isMinor;
+        g.deletedByAttendant = !!g.deletedByAttendant;
         // Some rows are blank placeholder seats until the guest names them.
         g.needsName = !g.name;
       });
@@ -269,7 +294,7 @@ function initForm() {
     }
 
     const missingName = groupData.guests.some(
-      (g) => !g.discarded && !g.name.trim(),
+      (g) => !g.deletedByAttendant && !g.name.trim(),
     );
     if (missingName) {
       message.textContent = content[lang].form.guestNameRequired;
@@ -277,7 +302,7 @@ function initForm() {
     }
 
     const allAnswered = groupData.guests.every(
-      (g, idx) => g.discarded || formData.get(`attending-${idx}`),
+      (g, idx) => g.deletedByAttendant || formData.get(`attending-${idx}`),
     );
     if (!allAnswered) {
       message.textContent = content[lang].form.validationError;
@@ -285,10 +310,10 @@ function initForm() {
     }
 
     const guests = groupData.guests.map((guest, idx) => {
-      // A discarded seat is submitted with an empty name, which the backend
-      // (submitRsvp in Code.gs) treats as "leave this row as-is."
-      if (guest.discarded) {
-        return { name: "", attending: "", menu: "", notes: "", isMinor: false };
+      // A discarded seat tells the backend (submitRsvp in Code.gs) to blank
+      // that row and flag it deleted_by_attendant instead of writing to it.
+      if (guest.deletedByAttendant) {
+        return { deletedByAttendant: true };
       }
       const attending = formData.get(`attending-${idx}`);
       return {
@@ -313,7 +338,19 @@ function initForm() {
       });
       const json = await res.json();
       if (json.result === "success") {
-        groupData.guests = guests.map((g) => ({ ...g, needsName: false }));
+        groupData.guests = guests.map((g) =>
+          g.deletedByAttendant
+            ? {
+                name: "",
+                attending: "",
+                menu: "",
+                notes: "",
+                isMinor: false,
+                needsName: true,
+                deletedByAttendant: true,
+              }
+            : { ...g, needsName: false, deletedByAttendant: false },
+        );
         setRsvpPhase("success");
       } else {
         message.textContent = content[lang].form.error;
