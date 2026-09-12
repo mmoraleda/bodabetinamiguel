@@ -68,19 +68,28 @@
     </section>
 
     <section class="section intro-section snap-section" id="intro">
-      <div class="section-inner--wide intro-layout reveal">
-        <div class="intro-photos">
-          <img class="intro-photo intro-photo--main" src="assets/img/intro-photo-main.jpg" alt="Betina y Miguel en un mirador junto a un arco de flores" loading="lazy">
-          <div class="intro-photos-secondary">
-            <img class="intro-photo" src="assets/img/intro-photo-2.jpg" alt="Betina y Miguel de excursión en el campo" loading="lazy">
-            <img class="intro-photo" src="assets/img/intro-photo-3.jpg" alt="Betina y Miguel junto a un río en el bosque" loading="lazy">
+      <div class="section-inner--wide reveal">
+        <h2 data-i18n="intro.eyebrow">Nuestra historia</h2>
+        <div class="flourish"><span class="flourish-heart">♥</span></div>
+        <div class="intro-carousel-wrap">
+          <button type="button" class="intro-nav-btn intro-nav-prev" aria-label="Previous">‹</button>
+          <div class="intro-carousel" id="introCarousel">
+            <div class="intro-slide">
+              <img class="intro-slide-photo" src="assets/img/intro-photo-main.jpg" alt="Betina y Miguel en un mirador junto a un arco de flores" loading="lazy">
+              <p class="body intro-slide-text" data-i18n="intro.steps.0">Hace más de tres años, nuestros caminos se cruzaron inesperadamente.</p>
+            </div>
+            <div class="intro-slide">
+              <img class="intro-slide-photo" src="assets/img/intro-photo-2.jpg" alt="Betina y Miguel de excursión en el campo" loading="lazy">
+              <p class="body intro-slide-text" data-i18n="intro.steps.1">Hemos compartido tantos momentos, historias, viajes e inquietudes.</p>
+            </div>
+            <div class="intro-slide">
+              <img class="intro-slide-photo" src="assets/img/intro-photo-3.jpg" alt="Betina y Miguel junto a un río en el bosque" loading="lazy">
+              <p class="body intro-slide-text" data-i18n="intro.steps.2">Ahora, ha llegado el momento de darnos el «sí quiero».</p>
+            </div>
           </div>
+          <button type="button" class="intro-nav-btn intro-nav-next" aria-label="Next">›</button>
         </div>
-        <div class="intro-copy">
-          <h2 data-i18n="intro.eyebrow">Nuestra historia</h2>
-          <div class="flourish flourish--left"><span class="flourish-heart">♥</span></div>
-          <p class="body intro-text" data-i18n="intro.text">Después de tantos momentos compartidos, ha llegado el día de celebrarlo junto a las personas que más queremos.</p>
-        </div>
+        <div class="intro-dots" id="introDots"></div>
       </div>
     </section>
 

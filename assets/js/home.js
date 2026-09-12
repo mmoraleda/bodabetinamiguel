@@ -74,6 +74,44 @@ function renderCountdownTiles() {
   document.getElementById("cdSeconds").textContent = String(seconds).padStart(2, "0");
 }
 
+function initIntroCarousel() {
+  const carousel = document.getElementById("introCarousel");
+  const dotsWrap = document.getElementById("introDots");
+  if (!carousel || !dotsWrap) return;
+
+  const slides = Array.from(carousel.querySelectorAll(".intro-slide"));
+  const dots = slides.map((slide, index) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Go to slide ${index + 1}`);
+    dot.addEventListener("click", () => {
+      slide.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    });
+    dotsWrap.appendChild(dot);
+    return dot;
+  });
+  if (dots.length) dots[0].classList.add("active");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const index = slides.indexOf(entry.target);
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+      });
+    },
+    { root: carousel, threshold: 0.6 },
+  );
+  slides.forEach((slide) => observer.observe(slide));
+
+  document.querySelector(".intro-nav-prev").addEventListener("click", () => {
+    carousel.scrollBy({ left: -carousel.clientWidth, behavior: "smooth" });
+  });
+  document.querySelector(".intro-nav-next").addEventListener("click", () => {
+    carousel.scrollBy({ left: carousel.clientWidth, behavior: "smooth" });
+  });
+}
+
 function initAccordions() {
   const list = document.getElementById("informationList");
   if (!list) return;
@@ -95,6 +133,7 @@ function initHome() {
   initReveal();
   initDotNav();
   initAccordions();
+  initIntroCarousel();
   applyLang(getLang());
   renderCountdownTiles();
   setInterval(renderCountdownTiles, 1000);

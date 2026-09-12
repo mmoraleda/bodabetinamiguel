@@ -10,7 +10,11 @@ const content = {
     scrollCue: "Descubre más",
     intro: {
       eyebrow: "Nuestra historia",
-      text: "Después de tantos momentos compartidos, ha llegado el día de celebrarlo junto a las personas que más queremos.",
+      steps: [
+        "Hace más de tres años, nuestros caminos se cruzaron inesperadamente. Aquel primer encuentro en la Plaza de España en un día primaveral de mayo iba a ser el primero de muchos, tan solo el comienzo de un bonito proyecto común que marcaría nuestras vidas para siempre.",
+        "Hemos compartido tantos momentos, historias, viajes, inquietudes, y también un sinfín de momentos difíciles que han afianzado cada vez más los cimientos de nuestra pequeña familia, y nuestro amor y aprecio el uno por el otro.",
+        "Ahora, ha llegado el momento de darnos el «sí quiero», celebrar nuestra unión y prometernos que iremos a ver cabras y alimentar vacas juntos, por el resto de nuestras vidas sin que nada (excepto los asientos aleatorios de Ryanair) nos separe.",
+      ],
     },
     eventTitle: "La Boda",
     weddingText: "El 8 de mayo de 2027 nos daremos el «sí quiero» en Finca Los Rosales, rodeados de quienes más queremos. Queremos compartir con vosotros cada detalle de este día.",
@@ -89,7 +93,11 @@ const content = {
     scrollCue: "Разгледай повече",
     intro: {
       eyebrow: "Нашата история",
-      text: "След толкова споделени мигове, най-сетне дойде денят да го отпразнуваме с хората, които обичаме най-много.",
+      steps: [
+        "Преди повече от три години пътищата ни се пресякоха неочаквано. Онази първа среща на Пласа де Испания, в един пролетен майски ден, щеше да се окаже първата от много други — само началото на един красив общ проект, който щеше да белязе живота ни завинаги.",
+        "Споделихме толкова много мигове, истории, пътувания, тревоги, а също и безброй трудни моменти, които все повече заздравяваха основите на малкото ни семейство, както и любовта и уважението ни един към друг.",
+        "Сега дойде моментът да си кажем „да“, да отпразнуваме съюза си и да си обещаем, че ще ходим да гледаме кози и да храним крави заедно, до края на живота си, без нищо (освен разбъркването на местата в Ryanair) да ни раздели.",
+      ],
     },
     eventTitle: "Сватбата",
     weddingText: "На 8 май 2027 г. ще си кажем „да“ във Finca Los Rosales, заобиколени от най-близките си хора. Искаме да споделим с вас всеки детайл от този ден.",
@@ -168,7 +176,11 @@ const content = {
     scrollCue: "Discover more",
     intro: {
       eyebrow: "Our story",
-      text: "After so many moments shared together, the day has finally come to celebrate it with the people we love most.",
+      steps: [
+        "More than three years ago, our paths crossed unexpectedly. That first meeting at Plaza de España, on a spring day in May, would turn out to be the first of many — just the beginning of a beautiful shared project that would mark our lives forever.",
+        "We've shared so many moments, stories, trips, worries, and also countless hard times that have only strengthened the foundations of our little family, and our love and appreciation for one another.",
+        "Now the moment has come to say \"I do,\" celebrate our union, and promise each other that we'll go see goats and feed cows together for the rest of our lives — with nothing (except Ryanair's random seating) ever keeping us apart.",
+      ],
     },
     eventTitle: "The Wedding",
     weddingText: "On May 8th, 2027 we'll say “I do” at Finca Los Rosales, surrounded by those we love most. We want to share every detail of this day with you.",
