@@ -1,9 +1,11 @@
 // Shared across index.html and rsvp.html: language handling, header/scroll behavior, reveal animations.
 
 const langChangeHandlers = [];
+const SUPPORTED_LANGS = ["es", "bg", "en"];
 
 function getLang() {
-  return localStorage.getItem("lang") || "es";
+  const urlLang = new URLSearchParams(window.location.search).get("lang");
+  return SUPPORTED_LANGS.includes(urlLang) ? urlLang : "es";
 }
 
 function onLangChange(fn) {
@@ -31,7 +33,6 @@ function applyLang(lang) {
 }
 
 function setLang(lang) {
-  localStorage.setItem("lang", lang);
   applyLang(lang);
 }
 
