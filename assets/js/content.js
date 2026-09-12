@@ -37,7 +37,7 @@ const content = {
       items: [
         { title: "Código de vestimenta", body: "Formal. Queremos veros elegantes. La ceremonia se celebrará sobre césped, así que os recomendamos evitar tacones muy finos." },
         { title: "Llegada y aparcamiento", body: "La finca dispone de aparcamiento propio dentro del recinto, con espacio para todos los coches de los invitados." },
-        { title: "Niños", body: "Información por confirmar." },
+        { title: "Niños", body: "En el caso de asistir con niños, por favor indícanoslo en el formulario de RSVP para tener en cuenta sus necesidades." },
       ],
     },
     closing: {
@@ -120,7 +120,7 @@ const content = {
       items: [
         { title: "Дрескод", body: "Официално. Искаме да ви видим елегантни. Церемонията ще се проведе на трева, затова препоръчваме да избягвате много тънки токчета." },
         { title: "Пристигане и паркиране", body: "Имението разполага със собствен паркинг на територията си, с място за колите на всички гости." },
-        { title: "Деца", body: "Информацията предстои." },
+        { title: "Деца", body: "В случай, че ще присъствате с деца, моля, посочете го във формуляра за потвърждение, за да имаме предвид техните нужди." },
       ],
     },
     closing: {
@@ -203,7 +203,7 @@ const content = {
       items: [
         { title: "Dress code", body: "Formal. We'd love to see you dressed up. The ceremony will take place on grass, so we recommend avoiding very thin heels." },
         { title: "Arrival & parking", body: "The venue has its own parking area on site, with space for all guests' cars." },
-        { title: "Kids", body: "Details to be confirmed." },
+        { title: "Kids", body: "If you're attending with children, please let us know on the RSVP form so we can take their needs into account." },
       ],
     },
     closing: {
